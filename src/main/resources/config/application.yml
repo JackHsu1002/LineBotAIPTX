@@ -1,0 +1,50 @@
+server:
+  port: 8085
+  tomcat:
+    uri-encoding: UTF-8
+  servlet:
+    session:
+      timeout: 30m       
+spring:
+  redis:
+    port: 6379
+    database: 0
+    host: localhost
+    password:
+    timeout: 5000
+    jedis:
+      pool:
+        max-idle: 8
+        min-idle: 0      
+
+  jpa:    
+    hibernate:
+      ddl-auto: update
+#      ddl-auto: none
+#      ddl-auto: create
+      naming:                 
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
+    show-sql: false
+    database: mysql
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  profiles:
+    active: offline
+  servlet:
+    multipart:
+      maxFileSize: 8MB
+      maxRequestSize: 8MB
+  http:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
+      
+logging:
+  level:
+    root: info
+    controller: info
+    service: info
+  file: logs/lintbotAIPTX.log
+ 

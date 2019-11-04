@@ -1,0 +1,12 @@
+spring:       
+  datasource:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/lineplatform?useUnicode=true&autoReconnect=true&characterEncoding=utf-8&useSSL=false&rewriteBatchedStatements=TRUE
+      username: root
+      password: 123456
+      
+line.bot:
+  channelToken: dgUAyUG7oK3Vasajcy3F3NgJrocFFnWY0U8SPvZ0rn7sKb2jNRYu3k+Ihvq6xJti37Q8b16rFV/SumDvQGzmZcWTg8xYu78jhCarSCCZUYNgoa82flrU25YTj7bIvB8Fl9nHHeRx+tCtxwBB0hQAGgdB04t89/1O/w1cDnyilFU=  
+  channelSecret: 490b4bf6dc986ede9263022ba44d2f58  
+  handler.path: /webhook/v1/LineBot 
+  
