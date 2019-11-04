@@ -78,7 +78,7 @@ public class LineMessageController {
     public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws Exception {
 		String messageText = event.getMessage().getText();
 		DialogflowModel res   = dailogflowSvc.CustomerAnalysis(messageText, "sabrelinecustomerservice-jtfoe", "test", "zh-tw");
-		System.out.println(res); 
+		System.out.println(res);  
     }
 	
 	@EventMapping
