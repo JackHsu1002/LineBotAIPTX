@@ -6,17 +6,6 @@ server:
     session:
       timeout: 30m       
 spring:
-  redis:
-    port: 6379
-    database: 0
-    host: localhost
-    password:
-    timeout: 5000
-    jedis:
-      pool:
-        max-idle: 8
-        min-idle: 0      
-
   jpa:    
     hibernate:
       ddl-auto: update
@@ -48,3 +37,13 @@ logging:
     service: info
   file: logs/lintbotAIPTX.log
  
+globalconfig:
+  dialogflow: dialogflowproject-254908
+  ptxid: e05eecb090f4409dadea02e1b42a6b6f
+  ptxkey: 7cFtU44LyExxULzd0_di3a6Z8Yk
+
+ptxapi:
+  airport_weather: https://ptx.transportdata.tw/MOTC/v2/Air/METAR/Airport/
+  airport_arrival: https://ptx.transportdata.tw/MOTC/v2/Air/FIDS/Airport/Arrival/
+  airport_departure: https://ptx.transportdata.tw/MOTC/v2/Air/FIDS/Airport/Departure/
+   

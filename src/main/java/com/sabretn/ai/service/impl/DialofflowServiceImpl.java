@@ -1,21 +1,10 @@
-package com.sabretn.ai.impl;
+package com.sabretn.ai.service.impl;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.cloud.dialogflow.v2.DetectIntentResponse;
@@ -63,16 +52,16 @@ public class DialofflowServiceImpl implements DialogflowService{
 		    System.out.format("Detected Intent: %s (confidence: %f)\n",
 		          queryResult.getIntent().getDisplayName(), queryResult.getIntentDetectionConfidence());
 		    System.out.format("Fulfillment Text: '%s'\n", queryResult.getFulfillmentText());
-		    List<String> keywordList = new ArrayList<>();
-		    Value value = queryResult.getParameters().getFieldsOrDefault("keyword", null);
-		    if(value != null) {
-		    	keywordList = value.getListValue().getValuesList().stream()
-    					.map(o -> o.getStringValue())
-    					.collect(Collectors.toList());
-		    }
-		    
+		    String iataCode="";
+		    Value iata = queryResult.getParameters().getFieldsOrDefault("Taiwan-IATA", null);
+		    if(iata != null) {
+		    	iataCode = iata.getStringValue();
+//		    	iataList = iata.getListValue().getValuesList().stream()
+//    					.map(o -> o.getStringValue())
+//    					.collect(Collectors.toList());
+		    }		    
 		    resModel.setIntentsName(queryResult.getIntent().getDisplayName());
-		    resModel.setKeywords(keywordList);
+		    resModel.setIataCode(iataCode);
 		    
 			
 		} catch (IOException e) {

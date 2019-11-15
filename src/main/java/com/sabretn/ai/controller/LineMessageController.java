@@ -34,8 +34,11 @@ import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.response.BotApiResponse;
 import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
+import com.sabretn.ai.config.GlobalConfig;
 import com.sabretn.ai.model.DialogflowModel;
+import com.sabretn.ai.ptx.model.METAR;
 import com.sabretn.ai.service.DialogflowService;
+import com.sabretn.ai.service.PTXService;
 
 @LineMessageHandler
 public class LineMessageController {
@@ -43,9 +46,11 @@ public class LineMessageController {
 	@Autowired
 	private LineMessagingClient lineMessagingClient;
 	@Autowired
-	private ObjectMapper mapper;
-	@Autowired
 	private DialogflowService dailogflowSvc;
+	@Autowired
+	private GlobalConfig globalConfig;
+	@Autowired
+	private PTXService ptxService;
 	
 	
 	private final Logger logger = LoggerFactory.getLogger(LineMessageController.class);
@@ -77,8 +82,32 @@ public class LineMessageController {
 	@EventMapping
     public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws Exception {
 		String messageText = event.getMessage().getText();
-		DialogflowModel res   = dailogflowSvc.CustomerAnalysis(messageText, "sabrelinecustomerservice-jtfoe", "test", "zh-tw");
-		System.out.println(res);  
+		String userId      = event.getSource().getUserId();
+		DialogflowModel res   = dailogflowSvc.CustomerAnalysis(messageText, globalConfig.getDialogflow(), userId, "zh-tw");
+		
+		String type = res.getIntentsName();
+		
+		//機場即時入境航班
+		if("type.airport.arrivalTime".equals(type)) {
+			String iataCode = res.getIataCode();
+		}
+		
+		//機場即時出境航班
+		if("type.airport.departureTime".equals(type)) {
+			String iataCode = res.getIataCode();
+			
+		}
+		
+		//國內機場氣象資訊觀測資料
+		if("type.airport.weather".equals(type)) {
+			String iataCode = res.getIataCode();
+			List<METAR> metar = ptxService.getAirportWeather(iataCode);
+			
+			
+		}
+		
+		
+		System.out.println(res);
     }
 	
 	@EventMapping
