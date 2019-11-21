@@ -39,7 +39,7 @@ public class PTXServiceImpl implements PTXService{
 	private PTXConfig ptxConfig;
 	@Override
 	public List<FIDSDeparture> getFIDSDeparture(String IATACode) {
-		String APIUrl = ptxConfig.getAirport_departure() + IATACode + "?$top=10&$format=JSON";
+		String APIUrl = ptxConfig.getAirport_departure() + IATACode + "?$orderby=ScheduleDepartureTime%20desc&$top=10&$format=JSON";
 		String response = getApiResponseString(APIUrl);
 		 
 	    Type FIDSDepartureListType = new TypeToken<ArrayList<FIDSDeparture>>(){}.getType();
@@ -54,7 +54,7 @@ public class PTXServiceImpl implements PTXService{
 
 	@Override
 	public List<FIDSArrival> getFIDSArrivals(String IATACode) {
-		String APIUrl = ptxConfig.getAirport_arrival() + IATACode + "?$top=10&$format=JSON";
+		String APIUrl = ptxConfig.getAirport_arrival() + IATACode + "?$orderby=ScheduleArrivalTime%20desc&$top=10&$format=JSON";
 		String response = getApiResponseString(APIUrl);
 		 
 	    Type FIDSArrivalListType = new TypeToken<ArrayList<FIDSArrival>>(){}.getType();

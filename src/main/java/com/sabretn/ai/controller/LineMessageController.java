@@ -1,6 +1,7 @@
 package com.sabretn.ai.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -36,7 +37,12 @@ import com.linecorp.bot.spring.boot.annotation.EventMapping;
 import com.linecorp.bot.spring.boot.annotation.LineMessageHandler;
 import com.sabretn.ai.config.GlobalConfig;
 import com.sabretn.ai.model.DialogflowModel;
+import com.sabretn.ai.ptx.model.FIDSArrival;
+import com.sabretn.ai.ptx.model.FIDSDeparture;
 import com.sabretn.ai.ptx.model.METAR;
+import com.sabretn.ai.ptx.model.flexmsg.ArrivalFlexMessage;
+import com.sabretn.ai.ptx.model.flexmsg.DepartureFlexMessage;
+import com.sabretn.ai.ptx.model.flexmsg.WeatherFlexMsg;
 import com.sabretn.ai.service.DialogflowService;
 import com.sabretn.ai.service.PTXService;
 
@@ -83,26 +89,50 @@ public class LineMessageController {
     public void handleTextMessageEvent(MessageEvent<TextMessageContent> event) throws Exception {
 		String messageText = event.getMessage().getText();
 		String userId      = event.getSource().getUserId();
+		String replyToken  = event.getReplyToken();
 		DialogflowModel res   = dailogflowSvc.CustomerAnalysis(messageText, globalConfig.getDialogflow(), userId, "zh-tw");
-		
+		System.out.println(res);
 		String type = res.getIntentsName();
 		
 		//機場即時入境航班
 		if("type.airport.arrivalTime".equals(type)) {
 			String iataCode = res.getIataCode();
+			List<FIDSArrival> arList =  ptxService.getFIDSArrivals(iataCode);
+			ArrivalFlexMessage afmsg = new ArrivalFlexMessage();
+			afmsg.setArList(arList);
+			afmsg.setIataCode(iataCode);
+			List<Message> messages = new ArrayList<>();
+			messages.add(afmsg.get()); 
+			lineMessagingClient.replyMessage(new ReplyMessage(replyToken, messages));
+			
 		}
 		
 		//機場即時出境航班
 		if("type.airport.departureTime".equals(type)) {
 			String iataCode = res.getIataCode();
-			
+			List<FIDSDeparture> depList = ptxService.getFIDSDeparture(iataCode);
+			DepartureFlexMessage demsg = new DepartureFlexMessage();
+			demsg.setDepList(depList);
+			demsg.setIataCode(iataCode);
+			List<Message> messages = new ArrayList<>();
+			messages.add(demsg.get()); 
+			lineMessagingClient.replyMessage(new ReplyMessage(replyToken, messages));
 		}
 		
 		//國內機場氣象資訊觀測資料
 		if("type.airport.weather".equals(type)) {
 			String iataCode = res.getIataCode();
-			List<METAR> metar = ptxService.getAirportWeather(iataCode);
-			
+			List<METAR> metarList = ptxService.getAirportWeather(iataCode);
+			if(!metarList.isEmpty()) {
+				METAR metar = metarList.get(0);
+				WeatherFlexMsg wFlexMsg = new WeatherFlexMsg();
+				wFlexMsg.setHeroImgUrl("https://0fb69f26.ngrok.io/img/weather.jpg");
+				wFlexMsg.setTitle(metar.getAirportName().getZh_tw());
+				wFlexMsg.setBodyText("溫度:"+metar.getTemperature() +" 風速:"+metar.getWindSpeed() + " "+metar.getWeatherDescription().getZh_tw());
+				List<Message> messages = new ArrayList<>();
+				messages.add(wFlexMsg.get());
+				lineMessagingClient.replyMessage(new ReplyMessage(replyToken, messages));
+			}
 			
 		}
 		

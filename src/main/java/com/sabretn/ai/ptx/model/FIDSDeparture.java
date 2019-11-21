@@ -1,6 +1,6 @@
 package com.sabretn.ai.ptx.model;
 
-public class FIDSDeparture {
+public class FIDSDeparture implements FIDSInterface{
 	private String FlightDate;
 	private String FlightNumber;
 	private Integer AirRouteType;

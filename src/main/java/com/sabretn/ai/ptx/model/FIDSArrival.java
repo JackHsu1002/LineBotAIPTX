@@ -1,6 +1,6 @@
 package com.sabretn.ai.ptx.model;
 
-public class FIDSArrival {
+public class FIDSArrival implements FIDSInterface{
 	
 	private String FlightDate;
 	private String FlightNumber;
