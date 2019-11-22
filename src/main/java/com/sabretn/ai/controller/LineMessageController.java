@@ -126,7 +126,7 @@ public class LineMessageController {
 			if(!metarList.isEmpty()) {
 				METAR metar = metarList.get(0);
 				WeatherFlexMsg wFlexMsg = new WeatherFlexMsg();
-				wFlexMsg.setHeroImgUrl("https://0fb69f26.ngrok.io/img/weather.jpg");
+				wFlexMsg.setHeroImgUrl(globalConfig.getWeatherurl());
 				wFlexMsg.setTitle(metar.getAirportName().getZh_tw());
 				wFlexMsg.setBodyText("溫度:"+metar.getTemperature() +" 風速:"+metar.getWindSpeed() + " "+metar.getWeatherDescription().getZh_tw());
 				List<Message> messages = new ArrayList<>();

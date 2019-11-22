@@ -41,6 +41,7 @@ globalconfig:
   dialogflow: dialogflowproject-254908
   ptxid: e05eecb090f4409dadea02e1b42a6b6f
   ptxkey: 7cFtU44LyExxULzd0_di3a6Z8Yk
+  weatherurl: https://0fb69f26.ngrok.io/img/airline.jpg
 
 ptxapi:
   airport_weather: https://ptx.transportdata.tw/MOTC/v2/Air/METAR/Airport/

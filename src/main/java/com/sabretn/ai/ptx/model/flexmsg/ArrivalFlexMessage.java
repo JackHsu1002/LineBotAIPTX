@@ -102,9 +102,9 @@ public class ArrivalFlexMessage implements Supplier<FlexMessage>{
 			LocalDate date = LocalDate.parse(ar.getFlightDate());
 			LocalDateTime arrTime = LocalDateTime.parse(ar.getScheduleArrivalTime());
 			String arrPlace = "";
-			if(!ar.getGate().isEmpty()) {
+			if(ar.getGate() != null && !ar.getGate().isEmpty()) {
 				arrPlace = " Gate: " + ar.getGate();
-			}else if(!ar.getTerminal().isEmpty()) {
+			}else if(ar.getTerminal() != null && !ar.getTerminal().isEmpty()) {
 				arrPlace = " Terimal: " + ar.getTerminal();
 			}
 			final Spacer spacer = Spacer.builder()					
