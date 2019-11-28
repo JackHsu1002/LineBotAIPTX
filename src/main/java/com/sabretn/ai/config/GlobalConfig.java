@@ -10,6 +10,7 @@ public class GlobalConfig {
 	private String ptxid;
 	private String ptxkey;
 	private String weatherurl;
+	private String rateurl;
 
 	public String getDialogflow() {
 		return dialogflow;
@@ -35,5 +36,10 @@ public class GlobalConfig {
 	public void setWeatherurl(String weatherurl) {
 		this.weatherurl = weatherurl;
 	}
-		
+	public String getRateurl() {
+		return rateurl;
+	}
+	public void setRateurl(String rateurl) {
+		this.rateurl = rateurl;
+	}		
 }

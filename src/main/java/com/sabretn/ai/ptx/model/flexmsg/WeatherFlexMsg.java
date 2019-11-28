@@ -1,5 +1,7 @@
 package com.sabretn.ai.ptx.model.flexmsg;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
@@ -7,10 +9,10 @@ import com.linecorp.bot.model.action.URIAction;
 import com.linecorp.bot.model.message.FlexMessage;
 import com.linecorp.bot.model.message.flex.component.Box;
 import com.linecorp.bot.model.message.flex.component.Button;
-import com.linecorp.bot.model.message.flex.component.Image;
 import com.linecorp.bot.model.message.flex.component.Text;
 import com.linecorp.bot.model.message.flex.component.Button.ButtonHeight;
 import com.linecorp.bot.model.message.flex.component.Button.ButtonStyle;
+import com.linecorp.bot.model.message.flex.component.Image;
 import com.linecorp.bot.model.message.flex.component.Image.ImageAspectMode;
 import com.linecorp.bot.model.message.flex.component.Image.ImageAspectRatio;
 import com.linecorp.bot.model.message.flex.component.Image.ImageSize;
@@ -29,9 +31,14 @@ public class WeatherFlexMsg implements Supplier<FlexMessage>{
 	
 	@Override
 	public FlexMessage get() {
-		
+		URI heroimgURI = null;
+		try {
+			heroimgURI = new URI(heroImgUrl);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 		final Image heroBlock =
-				Image.builder()
+				Image.builder()				
 					.url(heroImgUrl)
 					.size(ImageSize.FULL_WIDTH)
 					.aspectMode(ImageAspectMode.Cover)

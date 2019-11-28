@@ -1,15 +1,19 @@
 package com.sabretn.ai.controller;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
+import org.threeten.bp.LocalDateTime;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linecorp.bot.client.LineMessagingClient;
@@ -43,6 +47,7 @@ import com.sabretn.ai.ptx.model.METAR;
 import com.sabretn.ai.ptx.model.flexmsg.ArrivalFlexMessage;
 import com.sabretn.ai.ptx.model.flexmsg.DepartureFlexMessage;
 import com.sabretn.ai.ptx.model.flexmsg.WeatherFlexMsg;
+import com.sabretn.ai.rate.model.RateWrapper;
 import com.sabretn.ai.service.DialogflowService;
 import com.sabretn.ai.service.PTXService;
 
@@ -57,6 +62,8 @@ public class LineMessageController {
 	private GlobalConfig globalConfig;
 	@Autowired
 	private PTXService ptxService;
+	@Autowired
+	private ObjectMapper mapper;
 	
 	
 	private final Logger logger = LoggerFactory.getLogger(LineMessageController.class);
@@ -98,6 +105,15 @@ public class LineMessageController {
 		if("type.airport.arrivalTime".equals(type)) {
 			String iataCode = res.getIataCode();
 			List<FIDSArrival> arList =  ptxService.getFIDSArrivals(iataCode);
+			LocalDateTime now = LocalDateTime.now();
+			LocalDateTime start = now.minusHours(2);
+			LocalDateTime end = now.plusHours(2);
+			arList = arList.stream()
+					.filter(ar-> LocalDateTime.parse(ar.getScheduleArrivalTime()).isAfter(start) && LocalDateTime.parse(ar.getScheduleArrivalTime()).isBefore(end))
+					.collect(Collectors.toList());
+			if(arList.size() > 10) {
+				arList = arList.subList(0, 9);
+			}
 			ArrivalFlexMessage afmsg = new ArrivalFlexMessage();
 			afmsg.setArList(arList);
 			afmsg.setIataCode(iataCode);
@@ -111,6 +127,15 @@ public class LineMessageController {
 		if("type.airport.departureTime".equals(type)) {
 			String iataCode = res.getIataCode();
 			List<FIDSDeparture> depList = ptxService.getFIDSDeparture(iataCode);
+			LocalDateTime now = LocalDateTime.now();
+			LocalDateTime start = now.minusHours(2);
+			LocalDateTime end = now.plusHours(2);
+			depList = depList.stream()
+					.filter(dep-> LocalDateTime.parse(dep.getScheduleDepartureTime()).isAfter(start) && LocalDateTime.parse(dep.getScheduleDepartureTime()).isBefore(end))
+					.collect(Collectors.toList());
+			if(depList.size() > 10) {
+				depList = depList.subList(0, 9);
+			}
 			DepartureFlexMessage demsg = new DepartureFlexMessage();
 			demsg.setDepList(depList);
 			demsg.setIataCode(iataCode);
@@ -132,12 +157,20 @@ public class LineMessageController {
 				List<Message> messages = new ArrayList<>();
 				messages.add(wFlexMsg.get());
 				lineMessagingClient.replyMessage(new ReplyMessage(replyToken, messages));
+			}			
+		}
+		
+		//匯率
+		if("type.rate.exchange".equals(type)) {
+			URL url = new URL(globalConfig.getRateurl());			
+			RateWrapper rateWrapper = mapper.readValue(url, RateWrapper.class);
+			String currencyCode = res.getCurrencyCode();
+			if(currencyCode != null && !currencyCode.isEmpty() && rateWrapper != null) {
+				
 			}
 			
 		}
 		
-		
-		System.out.println(res);
     }
 	
 	@EventMapping

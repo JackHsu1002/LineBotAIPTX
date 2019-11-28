@@ -1,23 +1,23 @@
 server:
-  port: 8085
+  port: 8080
   tomcat:
     uri-encoding: UTF-8
   servlet:
     session:
       timeout: 30m       
 spring:
-  jpa:    
-    hibernate:
-      ddl-auto: update
+#  jpa:    
+#    hibernate:
+#      ddl-auto: update
 #      ddl-auto: none
 #      ddl-auto: create
-      naming:                 
-        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
-    show-sql: false
-    database: mysql
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+#      naming:                 
+#        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
+#    show-sql: false
+#    database: mysql
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
   profiles:
     active: offline
   servlet:
@@ -42,6 +42,7 @@ globalconfig:
   ptxid: e05eecb090f4409dadea02e1b42a6b6f
   ptxkey: 7cFtU44LyExxULzd0_di3a6Z8Yk
   weatherurl: https://0fb69f26.ngrok.io/img/airline.jpg
+  rateurl: http://data.fixer.io/api/latest?access_key=4c1bf8765ad019dda87a92b447d7994d&symbols=TWD,USD,HKD,GBP,AUD,CAD,SGD,CHF,JPY,ZAR,SEK,NZD,THB,PHP,IDR,EUR,KRW,VND,MYR,CNY
 
 ptxapi:
   airport_weather: https://ptx.transportdata.tw/MOTC/v2/Air/METAR/Airport/

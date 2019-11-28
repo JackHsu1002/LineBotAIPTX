@@ -53,16 +53,20 @@ public class DialofflowServiceImpl implements DialogflowService{
 		          queryResult.getIntent().getDisplayName(), queryResult.getIntentDetectionConfidence());
 		    System.out.format("Fulfillment Text: '%s'\n", queryResult.getFulfillmentText());
 		    String iataCode="";
+		    resModel.setIntentsName(queryResult.getIntent().getDisplayName());
+		    
 		    Value iata = queryResult.getParameters().getFieldsOrDefault("Taiwan-IATA", null);
 		    if(iata != null) {
 		    	iataCode = iata.getStringValue();
-//		    	iataList = iata.getListValue().getValuesList().stream()
-//    					.map(o -> o.getStringValue())
-//    					.collect(Collectors.toList());
-		    }		    
-		    resModel.setIntentsName(queryResult.getIntent().getDisplayName());
-		    resModel.setIataCode(iataCode);
+		    	resModel.setIataCode(iataCode);
+		    }
 		    
+		    String currencyCode="";
+		    Value Currency = queryResult.getParameters().getFieldsOrDefault("Currency", null);
+		    if(Currency != null) {
+		    	currencyCode = Currency.getStringValue();
+		    	resModel.setCurrencyCode(currencyCode);
+		    }		    
 			
 		} catch (IOException e) {
 			e.printStackTrace();
